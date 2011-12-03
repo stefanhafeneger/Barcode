@@ -1,0 +1,107 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml">
+	<head>
+		<title>Google Maps Location</title>
+		<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+		<script src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=ABQIAAAA9sAN1cA4gk5xvsCTzQq8IBQfNfGuD00pSirLCGQDQX2mTxOtaxQHzMjBU0rZa3YCe3WBFkrdu5HKrA" type="text/javascript"></script>
+		<script type="text/javascript">
+			function initialize(unknown) {
+				if(GBrowserIsCompatible()) {
+					// Create new map.
+					map = new GMap2(document.getElementById("map_canvas"), {backgroundColor: "#d5d6d7"});
+					// Define location.
+					var location = new GLatLng(%LATITUDE%, %LONGITUDE%);
+//					var location = new GLatLng(37.4419, -122.1419);
+					// Center map.
+					map.setCenter(location, 13);
+					// Add marker or show unknown text.
+					if(unknown)
+						document.getElementById("unknown").style.display = "block";
+					else
+						map.addOverlay(new GMarker(location));
+					// Hide copyright node.
+					var copyrightNode = document.getElementById("map_canvas").childNodes[1];
+					copyrightNode.style.display = "none";
+				}
+			}
+			function finish() {
+				if(map != null) {
+					// Update text node.
+					var textNode = document.getElementById("map_canvas").childNodes[1].childNodes[0];
+					var string = textNode.innerHTML;
+					textNode.innerHTML = string.substr(0, string.length - 3);
+					// Remove link node.
+					var linkNode = document.getElementById("map_canvas").childNodes[1].childNodes[1];
+					document.getElementById("map_canvas").childNodes[1].removeChild(linkNode);
+					// Show copyright node.
+					var copyrightNode = document.getElementById("map_canvas").childNodes[1];
+					copyrightNode.style.display = "block";
+				} else {
+					// Show network text.
+					document.getElementById("network").style.display = "block";
+				}
+			}
+			function update(latitude, longitude) {
+				// Hide unknown text.
+				document.getElementById("unknown").style.display = "none";
+				// Remove marker.
+				map.clearOverlays();
+				// Define location.
+				var location = new GLatLng(latitude, longitude);
+				// Center map.
+				map.panTo(location);
+				// Add marker.
+				map.addOverlay(new GMarker(location));
+			}
+			function unknown() {
+				// Remove marker.
+				map.clearOverlays();
+				// Show unknown text.
+				document.getElementById("unknown").style.display = "block";
+			}
+			var map;
+		</script>
+		<style type="text/css">
+			body {
+				background: #d5d6d7;
+				margin: 0;
+				padding: 0;
+				position: absolute;
+			}
+			#map_canvas {
+				height: 100px;
+				position: absolute;
+				width: 300px;
+			}
+			#unknown {
+				color: #000;
+				display: none;
+				font: bold 20px/20px Helvetica, sans-serif;
+				height: 20px;
+				left: 0;
+				position: absolute;
+				text-align: center;
+				text-shadow: #fff 2px 2px 5px;
+				top: 40px;
+				width: 300px;
+			}
+			#network {
+				color: #000;
+				display: none;
+				font: bold 20px/20px Helvetica, sans-serif;
+				height: 20px;
+				left: 0;
+				position: absolute;
+				text-align: center;
+				text-shadow: #fff 2px 2px 5px;
+				top: 40px;
+				width: 300px;
+			}
+		</style>
+	</head>
+	<body onload="initialize(%UNKNOWN%)" onunload="GUnload()">
+		<div id="map_canvas"></div>
+		<div id="unknown"><span>Location Unknown</span></div>
+		<div id="network"><span>Network Unavailable</span></div>
+	</body>
+</html>
